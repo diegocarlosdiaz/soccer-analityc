@@ -1,45 +1,76 @@
 import axios from 'axios';
 
-class AuthService {
-    private baseURL = 'https://api.ejemplo.com';
+interface login {
+    url: string;
+    jwt: string;
+    body: {
+        email: string;
+        password: string;
+    }
+}
 
-    async login(email: string, password: string) {
+class AuthService {
+    private static baseURL = process.env.NEXT_PUBLIC_API_AUTH_URL;
+
+    static {
+        if (!process.env.NEXT_PUBLIC_API_AUTH_URL) {
+            console.warn('WARNING: NEXT_PUBLIC_API_AUTH_URL is not defined');
+        }
+        axios.defaults.baseURL = process.env.NEXT_PUBLIC_API_AUTH_URL;
+    }
+
+    static async login(params: login) {
         try {
-            const response = await axios.post(`${this.baseURL}/auth/login`, {
-                email,
-                password
-            });
+            if (params.jwt) {
+                axios.defaults.headers.common['Authorization'] = `Bearer ${params.jwt}`;
+            }
+            const response = await axios.post(`/${params.url}`, {
+                email: params.body.email,
+                password: params.body.password
+            },
+                { withCredentials: true });
+            console.log(response)
             return response.data;
         } catch (error) {
+            console.error('Login error:', error);
             throw new Error('Error en la autenticación');
         }
     }
 
-    async registro(usuario: {
+    static async registro(usuario: {
         email: string,
         password: string,
-        nombre: string
+        username: string
     }) {
         try {
-            const response = await axios.post(`${this.baseURL}/auth/registro`, usuario);
+            const response = await axios.post(`${this.baseURL}/register`, usuario);
             return response.data;
         } catch (error) {
             throw new Error('Error en el registro');
         }
     }
 
-    async cerrarSesion() {
+    static async cerrarSesion() {
         try {
-            const response = await axios.post(`${this.baseURL}/auth/logout`);
+            const response = await axios.post(`${this.baseURL}/logout`, {}, {
+                withCredentials: true,  // Importante para manejar cookies
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            
+            // Eliminar la cookie manualmente en el cliente
+            document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT; domain=' + window.location.hostname;
+            document.cookie = 'token=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;';
+            
             return response.data;
         } catch (error) {
             throw new Error('Error al cerrar sesión');
         }
     }
-
-    async obtenerUsuarioActual() {
+    static async obtenerUsuarioActual() {
         try {
-            const response = await axios.get(`${this.baseURL}/auth/usuario`);
+            const response = await axios.get(`${this.baseURL}/usuario`);
             return response.data;
         } catch (error) {
             throw new Error('Error al obtener usuario');

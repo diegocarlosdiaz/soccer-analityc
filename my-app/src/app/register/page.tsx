@@ -1,79 +1,47 @@
 "use client";
-import { useAppDispatch } from '@/redux/hooks';
-import { useAppSelector } from '@/redux/hooks';
-import { doLogin } from '@/redux/features/authSlice';
-import React from 'react'
-
-type Props = {}
-
-
+import React from "react";
 import { useForm } from "react-hook-form";
-import { useRouter, useSearchParams } from 'next/navigation';
 
 type FormValues = {
+  username: string;
   email: string;
   password: string;
-  rememberMe?: boolean;
 };
 
-const useLogin = () => {
+export default function Page() {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormValues>();
-  const dispatch = useAppDispatch();
-  const { loading, error } = useAppSelector((state) => state.auth);
-  const searchParams = useSearchParams(); // Obtén los search params
-  const router = useRouter(); // Obtén el router
 
-  const onSubmit = handleSubmit(async (data) => {
-    try {
-      const response = await dispatch(doLogin({
-        url: 'login',
-        body: {
-          email: data.email,
-          password: data.password
-        }
-      })).unwrap();
-
-      // Almacenar el token en las cookies
-      console.log(response)
-      document.cookie = `token=${response.token}; path=/; max-age=${60 * 60 * 24 * 7};`; // 1 semana de duración
-
-      // Redirigir al usuario
-      const callbackUrl = searchParams.get('callbackUrl') || '/'; // Usa searchParams
-      const decodedCallbackUrl = decodeURIComponent(callbackUrl);
-      router.push(decodedCallbackUrl);
-    } catch (err) {
-      console.error('Error al iniciar sesión:', err);
-    }
-  });
-
-  return {
-    register,
-    handleSubmit: onSubmit,
-    errors,
-    loading, 
-    error,
-  };
-};
-
-
-const Login = (props: Props) => {
-  const { register, handleSubmit, errors } = useLogin();
+  const onSubmit = handleSubmit((data) => console.log(data));
 
   return (
-    <>
     <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900">
       <div className="max-w-md w-full space-y-8 p-8 bg-white dark:bg-gray-800 rounded-lg shadow-lg">
         <div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900 dark:text-white">
-            Iniciar sesión
+            Crear una cuenta
           </h2>
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+        <form className="mt-8 space-y-6" onSubmit={onSubmit}>
           <div className="rounded-md shadow-sm -space-y-px">
+            <div>
+              <label htmlFor="username" className="sr-only">
+                Nombre de usuario
+              </label>
+              <input
+                id="username"
+                {...register("username", { required: "Este campo es requerido" })}
+                type="text"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-white dark:bg-gray-700"
+                placeholder="Nombre de usuario"
+              />
+              {errors.username && (
+                <span className="text-red-500 text-sm">{errors.username.message}</span>
+              )}
+            </div>
             <div>
               <label htmlFor="email" className="sr-only">
                 Correo electrónico
@@ -88,7 +56,7 @@ const Login = (props: Props) => {
                   },
                 })}
                 type="email"
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-white dark:bg-gray-700"
+                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 dark:border-gray-600 placeholder-gray-500 dark:placeholder-gray-400 text-gray-900 dark:text-white focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm bg-white dark:bg-gray-700"
                 placeholder="Correo electrónico"
               />
               {errors.email && (
@@ -118,39 +86,25 @@ const Login = (props: Props) => {
             </div>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="flex items-center">
-              <input
-                id="rememberMe"
-                {...register("rememberMe")}
-                type="checkbox"
-                className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 dark:border-gray-600 rounded"
-              />
-              <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-900 dark:text-gray-300">
-                Recordarme
-              </label>
-            </div>
-
-            <div className="text-sm">
-              <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300">
-                ¿Olvidaste tu contraseña?
-              </a>
-            </div>
-          </div>
-
           <div>
             <button
               type="submit"
               className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
             >
-              Iniciar sesión
+              Registrarse
             </button>
+          </div>
+
+          <div className="text-sm text-center">
+            <a
+              href="/login"
+              className="font-medium text-indigo-600 hover:text-indigo-500 dark:text-indigo-400 dark:hover:text-indigo-300"
+            >
+              ¿Ya tienes una cuenta? Inicia sesión
+            </a>
           </div>
         </form>
       </div>
     </div>
-    </>
-  )
+  );
 }
-
-export default Login

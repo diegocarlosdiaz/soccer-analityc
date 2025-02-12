@@ -1,32 +1,30 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-// Rutas que serán públicas
 const publicRoutes = ['/login', '/register']
 
 export function middleware(request: NextRequest) {
-  const token = request.cookies.get('authToken')?.value
+  const token = request.cookies.get('token')?.value
   const { pathname } = request.nextUrl
 
-  // Permitir rutas públicas sin autenticación
-  if (publicRoutes.includes(pathname)) {
+  console.log('Middleware ejecutándose en ruta:', pathname)
+  console.log('Token actual:', token)
+
+  if (publicRoutes.some(route => pathname.startsWith(route))) {
     return NextResponse.next()
   }
 
-  // Si no hay token y la ruta no es pública, redirigir a login
   if (!token) {
     const loginUrl = new URL('/login', request.url)
-    // Guardar la URL original para redirigir después del login
-    loginUrl.searchParams.set('callbackUrl', pathname)
+    loginUrl.searchParams.set('callbackUrl', encodeURIComponent(pathname))
     return NextResponse.redirect(loginUrl)
   }
 
   return NextResponse.next()
 }
 
-// Configurar en qué rutas se ejecutará el middleware
 export const config = {
   matcher: [
-    '/((?!login|register|api|_next/static|_next/image|favicon.ico).*)'
+    '/((?!login|register|_next/static|_next/image|favicon.ico).*)'
   ]
 }
