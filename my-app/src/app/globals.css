@@ -5,17 +5,27 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --primary: #ef2d32;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+/* Definir clases personalizadas */
+@layer components {
+  .hover-primary {
+    @apply transition-colors;
+  }
+  
+  .hover-primary:hover {
+    color: var(--primary);
+  }
 }
