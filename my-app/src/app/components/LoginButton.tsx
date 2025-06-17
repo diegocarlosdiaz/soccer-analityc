@@ -16,22 +16,24 @@ const Button = ({ text }: { text: string }) => {
 
 const StyledWrapper = styled.div`
   button {
-    --primary-color: #ef2d32;
-    --secondary-color: #fff;
-    --hover-color: #111;
+    --primary-color: #dc2626; /* red-600 */
+    --secondary-color: #ffffff; /* white */
+    --hover-color: #b91c1c; /* red-700 */
     --arrow-width: 10px;
     --arrow-stroke: 2px;
     box-sizing: border-box;
     border: 0;
-    border-radius: 20px;
+    border-radius: 0.5rem; /* same as Tailwind's rounded-lg */
     color: var(--secondary-color);
-    padding: 1em 1.8em;
+    padding: 0.5rem 1rem; /* similar to py-2 px-4 */
     background: var(--primary-color);
     display: flex;
     transition: 0.2s background;
     align-items: center;
     gap: 0.6em;
-    font-weight: bold;
+    font-weight: 600;
+    font-family: inherit;
+    cursor: pointer;
   }
 
   button .arrow-wrapper {
@@ -76,5 +78,5 @@ const StyledWrapper = styled.div`
   }
 `;
 
-
 export default Button;
+

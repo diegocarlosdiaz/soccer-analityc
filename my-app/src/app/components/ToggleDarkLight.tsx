@@ -7,7 +7,7 @@ const Switch = ({
     theme,
   }: {
     setTheme: (value: string) => void;
-    theme: string;
+    theme: string | undefined;
   }) => {
   const [mounted, setMounted] = useState(false);
 
