@@ -18,7 +18,7 @@ export default function LandingSection({
   children,
 }: SectionProps) {
   return (
-    <section className="w-full flex flex-col lg:flex-row items-center gap-12 py-16 px-4">
+    <section className="w-full flex flex-col lg:flex-row items-center gap-6 sm:gap-8 lg:gap-12 py-8 sm:py-12 lg:py-24 px-4 mt-4 sm:mt-8 lg:mt-20 mb-6 sm:mb-8 lg:mb-16">
       {/* Imagen con efectos mejorados */}
       <div className={`
         w-full lg:w-1/2 
@@ -49,7 +49,7 @@ export default function LandingSection({
       `}>
         {title && (
           <h2
-            className="text-4xl lg:text-5xl font-extrabold leading-tight 
+            className="text-3xl lg:text-3xl font-extrabold leading-tight 
     bg-gradient-to-r from-gray-700 via-red-600 to-gray-700 
     bg-clip-text text-transparent"
           >
@@ -58,7 +58,7 @@ export default function LandingSection({
         )}
 
         {text && (
-          <p className="text-lg lg:text-xl text-gray-700 leading-relaxed font-medium">
+          <p className="leading-relaxed font-medium">
             {text}
           </p>
         )}

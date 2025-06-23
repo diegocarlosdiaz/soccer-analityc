@@ -19,17 +19,14 @@ export default function Home() {
 
   return (
     <ThemeWrapper>
-      <div className="container mx-auto px-4 flex flex-col min-h-screen font-[family-name:var(--font-geist-sans)]">
-        {/* Navbar fija arriba */}
-        <header className="w-full">
+       <header className="w-full">
           <Navbar />
         </header>
-
+      <div className="container mx-auto px-4 flex flex-col min-h-screen font-[family-name:var(--font-geist-sans)]">
         {/* Contenido principal que se expande */}
         <main className="">
           <Landing />
         </main>
-
         {/* Footer */}
         <footer className="w-full">
           <Footer />

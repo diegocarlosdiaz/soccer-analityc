@@ -30,7 +30,7 @@ export default function Section({
       {/* Contenido */}
       <aside className={`w-full md:w-1/2 ${imageLeft ? 'order-2' : 'order-1'} flex flex-col gap-4`}>
         {title && <h2 className="text-3xl font-bold mb-2">{title}</h2>}
-        {text && <p className="text-lg text-gray-600 mb-2">{text}</p>}
+        {text && <p className="text-lg mb-2">{text}</p>}
         {children}
       </aside>
     </section>

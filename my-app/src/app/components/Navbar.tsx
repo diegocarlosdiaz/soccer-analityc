@@ -56,7 +56,7 @@ export default function Navbar({
         lightSrc={logoLight}
         darkSrc={logoDark}
         alt="logo"
-        width={160}
+        width={100}
         height={50}
         priority
       />
